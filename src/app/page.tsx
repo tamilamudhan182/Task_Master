@@ -36,21 +36,21 @@ export default function LandingPage() {
             <div className="flex flex-col items-center">
               <CheckCircle className="size-12 text-primary mb-4" />
               <h3 className="text-xl font-semibold mb-2">Intuitive Task Management</h3>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground px-4">
                 Easily add, edit, and delete tasks with a clean, user-friendly interface.
               </p>
             </div>
             <div className="flex flex-col items-center">
               <CheckCircle className="size-12 text-primary mb-4" />
               <h3 className="text-xl font-semibold mb-2">Due Date Tracking</h3>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground px-4">
                 Assign due dates to your tasks to stay on top of your deadlines.
               </p>
             </div>
             <div className="flex flex-col items-center">
               <CheckCircle className="size-12 text-primary mb-4" />
               <h3 className="text-xl font-semibold mb-2">Task Prioritization</h3>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground px-4">
                 Organize your tasks into active and completed lists to focus on what matters most.
               </p>
             </div>
