@@ -1,5 +1,6 @@
 import { ThemeToggle } from "@/components/theme-toggle";
 import TaskMaster from "@/components/tasks/task-master";
+import { UserNav } from "@/components/user-nav";
 
 export default function DashboardPage() {
   return (
@@ -11,6 +12,7 @@ export default function DashboardPage() {
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
             <ThemeToggle />
+            <UserNav />
           </div>
         </div>
       </header>
