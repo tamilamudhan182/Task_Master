@@ -14,8 +14,12 @@ export default function DashboardPage() {
           </div>
         </div>
       </header>
-      <main className="flex-1 container py-8 md:py-12">
-        <TaskMaster />
+      <main className="flex-1">
+        <div className="container py-8 md:py-12">
+            <div className="max-w-3xl mx-auto">
+                <TaskMaster />
+            </div>
+        </div>
       </main>
       <footer className="py-6 md:px-8 md:py-0">
         <div className="container flex flex-col items-center justify-center gap-4 md:h-24">
