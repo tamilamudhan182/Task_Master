@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { PlayCircle, ListTodo } from "lucide-react";
+import { Check, PlayCircle, ListTodo, Calendar, Zap, Rocket } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -15,7 +15,7 @@ export default function LandingPage() {
             </Link>
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
               <Link
-                href="#"
+                href="#features"
                 className="text-muted-foreground transition-colors hover:text-foreground"
                 prefetch={false}
               >
@@ -56,13 +56,12 @@ export default function LandingPage() {
 
           <div className="container py-24 md:py-40 text-center">
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
-              Everything you need to build
+              Streamline Your Workflow,
               <br />
-              your digital product <span className="text-accent">empire</span>
+              Master Your Tasks with <span className="text-accent">Ease</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Whether you're launching a new venture or scaling an established
-              brand, our platform equips you to grow and thrive.
+              An intuitive and powerful solution to manage your daily tasks, boost productivity, and never miss a deadline again.
             </p>
             <div className="flex gap-4 justify-center">
                <Button variant="outline" size="lg">
@@ -70,19 +69,113 @@ export default function LandingPage() {
                  How it works
                </Button>
                <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                <Link href="/dashboard">Get Started</Link>
+                <Link href="/dashboard">Get Started for Free</Link>
                </Button>
             </div>
           </div>
         </section>
+
+        <section id="features" className="container py-12 md:py-24">
+            <div className="mx-auto grid max-w-5xl items-center gap-6 lg:grid-cols-2 lg:gap-12">
+                <div className="grid gap-4">
+                    <div className="grid gap-1">
+                        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                            All-in-one task management
+                        </h2>
+                        <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                            A complete suite of tools to help you organize, track, and accomplish your goals efficiently.
+                        </p>
+                    </div>
+                    <ul className="grid gap-4">
+                        <li className="flex items-start gap-4">
+                            <Check className="mt-1 h-5 w-5 flex-shrink-0 text-accent" />
+                            <div>
+                                <h3 className="font-semibold">Intuitive Interface</h3>
+                                <p className="text-muted-foreground">Clean, simple, and easy to navigate.</p>
+                            </div>
+                        </li>
+                        <li className="flex items-start gap-4">
+                            <Check className="mt-1 h-5 w-5 flex-shrink-0 text-accent" />
+                            <div>
+                                <h3 className="font-semibold">Smart Task Prioritization</h3>
+                                <p className="text-muted-foreground">Focus on what matters most with intelligent sorting.</p>
+                            </div>
+                        </li>
+                        <li className="flex items-start gap-4">
+                            <Check className="mt-1 h-5 w-5 flex-shrink-0 text-accent" />
+                            <div>
+                                <h3 className="font-semibold">Collaboration Tools</h3>
+                                <p className="text-muted-foreground">Work seamlessly with your team in one place.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div className="grid gap-6">
+                    <div className="relative overflow-hidden rounded-lg border bg-card shadow-lg">
+                        <div className="flex aspect-[4/3] items-center justify-center bg-muted/20">
+                            <Calendar className="h-24 w-24 text-muted-foreground/30" />
+                        </div>
+                        <div className="p-4">
+                            <h3 className="text-lg font-semibold">Calendar View</h3>
+                            <p className="text-sm text-muted-foreground">Visualize your schedule and deadlines.</p>
+                        </div>
+                    </div>
+                    <div className="relative overflow-hidden rounded-lg border bg-card shadow-lg">
+                        <div className="flex aspect-[4/3] items-center justify-center bg-muted/20">
+                            <Zap className="h-24 w-24 text-muted-foreground/30" />
+                        </div>
+                        <div className="p-4">
+                            <h3 className="text-lg font-semibold">Automated Reminders</h3>
+                            <p className="text-sm text-muted-foreground">Never forget an important task again.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
       </main>
-      <footer className="py-6 md:px-8 md:py-0">
-        <div className="container flex flex-col items-center justify-center gap-4 md:h-24">
-          <p className="text-center text-sm leading-loose text-muted-foreground">
-            © {new Date().getFullYear()} TaskMaster. All Rights Reserved.
-          </p>
+      <footer className="border-t">
+        <div className="container py-12">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <div className="flex flex-col gap-2">
+                    <Link href="#" className="flex items-center gap-2 font-semibold" prefetch={false}>
+                        <ListTodo className="h-6 w-6 text-accent" />
+                        TaskMaster
+                    </Link>
+                    <p className="text-sm text-muted-foreground">The best way to manage your tasks.</p>
+                </div>
+                <div className="grid gap-2 text-sm">
+                    <h3 className="font-semibold">Product</h3>
+                    <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>Features</Link>
+                    <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>Pricing</Link>
+                    <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>Integrations</Link>
+                </div>
+                <div className="grid gap-2 text-sm">
+                    <h3 className="font-semibold">Company</h3>
+                    <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>About Us</Link>
+                    <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>Careers</Link>
+                    <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>Contact</Link>
+                </div>
+                <div className="grid gap-2 text-sm">
+                    <h3 className="font-semibold">Legal</h3>
+                    <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>Terms of Service</Link>
+                    <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>Privacy Policy</Link>
+                </div>
+            </div>
+            <div className="mt-8 flex items-center justify-between border-t pt-6">
+                <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} TaskMaster. All rights reserved.</p>
+                <div className="flex items-center gap-4">
+                    <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>
+                        <Rocket className="h-5 w-5" />
+                        <span className="sr-only">Twitter</span>
+                    </Link>
+                    <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/></svg>
+                        <span className="sr-only">GitHub</span>
+                    </Link>
+                </div>
+            </div>
         </div>
-      </footer>
+    </footer>
     </div>
   );
 }
