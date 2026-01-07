@@ -2,13 +2,28 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { PlayCircle, ListTodo, Zap, Download, UserPlus, PackageCheck } from "lucide-react";
+import { PlayCircle, Zap } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { UserNav } from "@/components/user-nav";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+
+const DiamondIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M12.45 2.23 6.2 8.48a2.5 2.5 0 0 0 0 3.54l5.22 5.22a2.5 2.5 0 0 0 3.54 0l6.25-6.25a2.5 2.5 0 0 0 0-3.54L15.99 2.23a2.5 2.5 0 0 0-3.54 0Z" />
+    </svg>
+  );
 
 export default function LandingPage() {
 
@@ -32,7 +47,7 @@ export default function LandingPage() {
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="#" className="flex items-center gap-2" prefetch={false}>
-              <ListTodo className="h-6 w-6 text-accent" />
+              <DiamondIcon className="h-6 w-6" />
               <span className="font-bold text-lg">TaskMaster</span>
             </Link>
           </div>
