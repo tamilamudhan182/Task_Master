@@ -23,7 +23,11 @@ export default function TaskList({
   onDelete,
   onUpdate,
 }: TaskListProps) {
-  const sortedTasks = tasks.sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis());
+  // Filter out tasks without a createdAt timestamp before sorting
+  const sortedTasks = tasks
+    .filter((task) => task.createdAt)
+    .sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis());
+    
   const activeTasks = sortedTasks.filter((task) => !task.completed);
   const completedTasks = sortedTasks.filter((task) => task.completed);
 
