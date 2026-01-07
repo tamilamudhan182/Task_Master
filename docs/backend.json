@@ -1,0 +1,66 @@
+{
+  "entities": {
+    "Task": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Task",
+      "type": "object",
+      "description": "Represents a task in the TaskMaster application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Task entity."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the task."
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "The date and time when the task is due.",
+          "format": "date-time"
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Indicates whether the task is completed or not."
+        }
+      },
+      "required": [
+        "id",
+        "description",
+        "dueDate",
+        "completed"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}/tasks/{taskId}",
+        "definition": {
+          "entityName": "Task",
+          "schema": {
+            "$ref": "#/backend/entities/Task"
+          },
+          "description": "Stores tasks for a specific user.  The 'userId' path segment ensures that tasks are associated with a particular user, and access can be controlled based on the authenticated user's ID.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The ID of the user who owns the task."
+            },
+            {
+              "name": "taskId",
+              "description": "The ID of the task."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to store tasks for individual users. Tasks are stored under a user-specific collection, ensuring data isolation and simplified security rules. Each user has their own collection of tasks under `/users/{userId}/tasks/{taskId}`. This structure facilitates path-based ownership, making it straightforward to secure data based on the authenticated user.  \n\n**Authorization Independence:** The structure inherently achieves authorization independence. Since tasks are nested under the user's ID, access control can be enforced without needing to fetch parent document data. Security rules can directly check if `request.auth.uid` matches the `userId` path parameter.\n\n**QAPs (Rules are not Filters):** This structure supports secure `list` operations because all documents in the `tasks` collection share the same security requirements (owned by the user). The security rules can allow listing tasks only if `request.auth.uid == userId`, preventing unauthorized access to other users' tasks."
+  }
+}

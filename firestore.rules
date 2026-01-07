@@ -1,0 +1,86 @@
+/**
+ * # Core Philosophy
+ * This ruleset enforces a strict user-ownership model where all data is private to the user who created it.
+ * Access control is based on matching the authenticated user's ID with the user ID present in the document path.
+ *
+ * # Data Structure
+ * The data is organized hierarchically. All user-specific data, such as tasks, is nested within a user-specific
+ * collection path: `/users/{userId}/tasks/{taskId}`. This structure inherently isolates one user's data from another.
+ *
+ * # Key Security Decisions
+ * - **Strict Ownership**: A user can only access documents located under their own user ID path (`/users/{request.auth.uid}/...`).
+ * - **No Public Data**: All collections are private. There are no publicly readable collections.
+ * - **No User Listing**: The top-level `/users` collection is not readable or listable. Users cannot discover other users.
+ * - **Default Deny**: Any path not explicitly matched by a rule is inaccessible by default.
+ *
+ * # Denormalization for Authorization
+ * The security model relies on path-based authorization. The user's UID is part of the document path, which is the most
+ * performant and secure way to implement ownership rules, as it avoids the need for extra document reads (`get()`)
+ * to check for permissions.
+ *
+ * # Structural Segregation
+ * This ruleset does not currently define separate collections for public vs. private data, as all data is considered private.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for improved readability and reusability.
+
+    /**
+     * Checks if a user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the currently authenticated user is the owner of the document,
+     * based on the userId wildcard in the path.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if the currently authenticated user is the owner of an EXISTING document.
+     * CRITICAL for safe update and delete operations.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * Validates that the task document being created contains an 'id' field
+     * that matches the document's ID in the path. This enforces relational integrity.
+     */
+    function hasValidTaskDataOnCreate(taskId) {
+      return request.resource.data.id == taskId;
+    }
+
+    /**
+     * Ensures that the task's unique 'id' field cannot be changed after creation.
+     * This protects the fundamental link between the document data and its path.
+     */
+    function isTaskDataImmutable() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+
+    /**
+     * @description Rules for a user's private tasks. Only the owner can perform any action on their tasks.
+     * @path        /users/{userId}/tasks/{taskId}
+     * @allow       (create) A user with uid 'user123' can create a task at `/users/user123/tasks/task456`.
+     * @deny        (get) A user with uid 'userABC' is denied reading a task at `/users/user123/tasks/task456`.
+     * @principle   Restricts access to a user's own data tree based on path parameters.
+     */
+    match /users/{userId}/tasks/{taskId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && hasValidTaskDataOnCreate(taskId);
+      allow update: if isExistingOwner(userId) && isTaskDataImmutable();
+      allow delete: if isExistingOwner(userId);
+    }
+
+  }
+}
