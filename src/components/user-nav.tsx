@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Avatar,
   AvatarFallback,
@@ -15,15 +16,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useUser, useAuth } from "@/firebase";
 import { signOut } from "firebase/auth";
+import { AuthForm } from "./auth-form";
 
 export function UserNav() {
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
+  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "signup">("login");
 
   const handleSignOut = () => {
     signOut(auth);
+  };
+
+  const openAuthDialog = (mode: "login" | "signup") => {
+    setAuthMode(mode);
+    setIsAuthDialogOpen(true);
   };
 
   if (isUserLoading) {
@@ -31,12 +41,34 @@ export function UserNav() {
   }
 
   if (!user) {
-    // In a real app, you'd likely have sign-in/sign-up buttons here
-    // For now, we return null as anonymous auth is handled in TaskMaster
-    return null; 
+    return (
+      <>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" onClick={() => openAuthDialog("login")}>Login</Button>
+          <Button onClick={() => openAuthDialog("signup")} className="bg-accent hover:bg-accent/90 text-accent-foreground">Sign Up</Button>
+        </div>
+        <Dialog open={isAuthDialogOpen} onOpenChange={setIsAuthDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>{authMode === 'login' ? 'Log In' : 'Create an account'}</DialogTitle>
+              <DialogDescription>
+                {authMode === 'login' 
+                  ? 'Enter your credentials to access your account.'
+                  : 'Enter your email and password to sign up.'}
+              </DialogDescription>
+            </DialogHeader>
+            <AuthForm
+              mode={authMode}
+              onSuccess={() => setIsAuthDialogOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      </>
+    );
   }
 
   const getInitials = (name: string | null | undefined) => {
+    if (!name && user.isAnonymous) return 'AN';
     if (!name) return 'TM';
     const names = name.split(' ');
     if (names.length > 1) {
@@ -62,10 +94,10 @@ export function UserNav() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {user.displayName || "Anonymous User"}
+              {user.displayName || (user.isAnonymous ? "Anonymous User" : "User")}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user.email || user.isAnonymous ? 'anonymous' : ''}
+              {user.email || (user.isAnonymous ? 'anonymous' : '')}
             </p>
           </div>
         </DropdownMenuLabel>

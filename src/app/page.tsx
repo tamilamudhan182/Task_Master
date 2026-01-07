@@ -3,6 +3,7 @@ import { PlayCircle, ListTodo, Zap } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
+import { UserNav } from "@/components/user-nav";
 
 export default function LandingPage() {
   return (
@@ -26,12 +27,7 @@ export default function LandingPage() {
               </Link>
             </nav>
             <ThemeToggle />
-            <Button variant="ghost" asChild>
-              <Link href="/dashboard">Login</Link>
-            </Button>
-            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link href="/dashboard">Sign Up</Link>
-            </Button>
+            <UserNav />
           </div>
         </div>
       </header>
