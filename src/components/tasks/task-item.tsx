@@ -49,13 +49,13 @@ import { cn } from "@/lib/utils";
 
 interface TaskItemProps {
   task: Task;
-  onToggleComplete: (id: string) => void;
+  onToggleComplete: (id: string, completed: boolean) => void;
   onDelete: (id: string) => void;
-  onUpdate: (id: string, newValues: { text: string; dueDate: Date | null }) => void;
+  onUpdate: (id: string, newValues: { description: string; dueDate: Date | null }) => void;
 }
 
 const formSchema = z.object({
-  text: z.string().min(1, { message: "Task description cannot be empty." }),
+  description: z.string().min(1, { message: "Task description cannot be empty." }),
   dueDate: z.date().nullable(),
 });
 
@@ -72,8 +72,8 @@ export default function TaskItem({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      text: task.text,
-      dueDate: task.dueDate,
+      description: task.description,
+      dueDate: task.dueDate ? task.dueDate.toDate() : null,
     },
   });
 
@@ -81,6 +81,8 @@ export default function TaskItem({
     onUpdate(task.id, values);
     setIsEditDialogOpen(false);
   };
+
+  const taskDueDate = task.dueDate ? task.dueDate.toDate() : null;
 
   return (
     <Card
@@ -93,8 +95,8 @@ export default function TaskItem({
         <Checkbox
           id={`task-${task.id}`}
           checked={task.completed}
-          onCheckedChange={() => onToggleComplete(task.id)}
-          aria-label={`Mark task "${task.text}" as ${
+          onCheckedChange={(checked) => onToggleComplete(task.id, !!checked)}
+          aria-label={`Mark task "${task.description}" as ${
             task.completed ? "incomplete" : "complete"
           }`}
         />
@@ -106,12 +108,12 @@ export default function TaskItem({
               task.completed && "line-through text-muted-foreground"
             )}
           >
-            {task.text}
+            {task.description}
           </label>
-          {task.dueDate && (
+          {taskDueDate && (
             <div className="text-sm text-muted-foreground flex items-center gap-1">
               <CalendarIcon className="size-4" />
-              {format(task.dueDate, "MMM d, yyyy")}
+              {format(taskDueDate, "MMM d, yyyy")}
             </div>
           )}
         </div>
@@ -120,7 +122,7 @@ export default function TaskItem({
             variant="ghost"
             size="icon"
             onClick={() => {
-              form.reset({ text: task.text, dueDate: task.dueDate });
+              form.reset({ description: task.description, dueDate: taskDueDate });
               setIsEditDialogOpen(true);
             }}
           >
@@ -168,7 +170,7 @@ export default function TaskItem({
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="text"
+                name="description"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Task</FormLabel>

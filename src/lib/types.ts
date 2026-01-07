@@ -1,6 +1,9 @@
+import type { Timestamp } from "firebase/firestore";
+
 export type Task = {
   id: string;
-  text: string;
-  dueDate: Date | null;
+  description: string;
+  dueDate: Timestamp | null;
   completed: boolean;
+  createdAt: Timestamp;
 };

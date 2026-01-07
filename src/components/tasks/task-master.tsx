@@ -1,78 +1,80 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import type { Task } from "@/lib/types";
 import TaskForm from "./task-form";
 import TaskList from "./task-list";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
-
-const initialTasks: Task[] = [
-  {
-    id: "1",
-    text: "Design the new landing page",
-    dueDate: new Date(),
-    completed: false,
-  },
-  {
-    id: "2",
-    text: "Develop the authentication flow",
-    dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-    completed: false,
-  },
-  {
-    id: "3",
-    text: "Write end-to-end tests for the checkout process",
-    dueDate: null,
-    completed: false,
-  },
-  {
-    id: "4",
-    text: "Deploy the staging environment",
-    dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-    completed: true,
-  },
-  {
-    id: "5",
-    text: "Review pull requests",
-    dueDate: new Date(),
-    completed: true,
-  },
-];
+import {
+  useFirestore,
+  useUser,
+  useMemoFirebase,
+  useCollection,
+  useAuth,
+  addDocumentNonBlocking,
+  updateDocumentNonBlocking,
+  deleteDocumentNonBlocking,
+} from "@/firebase";
+import { initiateAnonymousSignIn } from "@/firebase/non-blocking-login";
+import { collection, doc, serverTimestamp } from "firebase/firestore";
+import { nanoid } from "nanoid";
 
 export default function TaskMaster() {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const { toast } = useToast();
+  const auth = useAuth();
+  const firestore = useFirestore();
+  const { user, isUserLoading } = useUser();
 
-  const handleAddTask = (values: { text: string; dueDate: Date | null }) => {
-    const newTask: Task = {
-      id: Date.now().toString(),
-      text: values.text,
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      initiateAnonymousSignIn(auth);
+    }
+  }, [isUserLoading, user, auth]);
+
+  const tasksCollection = useMemoFirebase(() => {
+    if (!user) return null;
+    return collection(firestore, "users", user.uid, "tasks");
+  }, [firestore, user]);
+
+  const { data: tasks, isLoading } = useCollection<Task>(tasksCollection);
+
+  const handleAddTask = (values: {
+    text: string;
+    dueDate: Date | null;
+  }) => {
+    if (!tasksCollection) return;
+
+    const newTask = {
+      id: nanoid(),
+      description: values.text,
       dueDate: values.dueDate,
       completed: false,
+      createdAt: serverTimestamp(),
     };
-    setTasks([newTask, ...tasks]);
+    addDocumentNonBlocking(tasksCollection, newTask);
+
     toast({
       title: "Task Added",
       description: `"${values.text}" has been added to your list.`,
     });
   };
 
-  const handleToggleComplete = (id: string) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
+  const handleToggleComplete = (id: string, completed: boolean) => {
+    if (!user) return;
+    const taskRef = doc(firestore, "users", user.uid, "tasks", id);
+    updateDocumentNonBlocking(taskRef, { completed });
   };
 
   const handleDeleteTask = (id: string) => {
-    const taskToDelete = tasks.find((task) => task.id === id);
-    setTasks(tasks.filter((task) => task.id !== id));
+    if (!user) return;
+    const taskToDelete = tasks?.find((task) => task.id === id);
     if (taskToDelete) {
+      const taskRef = doc(firestore, "users", user.uid, "tasks", id);
+      deleteDocumentNonBlocking(taskRef);
       toast({
         title: "Task Deleted",
-        description: `"${taskToDelete.text}" has been removed.`,
+        description: `"${taskToDelete.description}" has been removed.`,
         variant: "destructive",
       });
     }
@@ -80,16 +82,48 @@ export default function TaskMaster() {
 
   const handleUpdateTask = (
     id: string,
-    newValues: { text: string; dueDate: Date | null }
+    newValues: { description: string; dueDate: Date | null }
   ) => {
-    setTasks(
-      tasks.map((task) => (task.id === id ? { ...task, ...newValues } : task))
-    );
+    if (!user) return;
+    const taskRef = doc(firestore, "users", user.uid, "tasks", id);
+    updateDocumentNonBlocking(taskRef, newValues);
     toast({
       title: "Task Updated",
       description: `Your task has been successfully updated.`,
     });
   };
+  
+  if (isUserLoading || isLoading) {
+    return (
+        <div className="space-y-8">
+            <Card>
+                <CardContent className="p-6">
+                    <div className="animate-pulse flex space-x-4">
+                        <div className="flex-1 space-y-4 py-1">
+                            <div className="h-4 bg-muted rounded w-3/4"></div>
+                        </div>
+                        <div className="h-10 w-24 bg-muted rounded"></div>
+                    </div>
+                </CardContent>
+            </Card>
+            <div className="space-y-3">
+                <div className="animate-pulse flex items-center space-x-4 p-4 border rounded-lg">
+                    <div className="h-6 w-6 bg-muted rounded-sm"></div>
+                    <div className="flex-1 space-y-2 py-1">
+                        <div className="h-4 bg-muted rounded w-1/2"></div>
+                        <div className="h-3 bg-muted rounded w-1/4"></div>
+                    </div>
+                </div>
+                <div className="animate-pulse flex items-center space-x-4 p-4 border rounded-lg">
+                    <div className="h-6 w-6 bg-muted rounded-sm"></div>
+                    <div className="flex-1 space-y-2 py-1">
+                        <div className="h-4 bg-muted rounded w-3/4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
   return (
     <div className="space-y-8">
@@ -99,7 +133,7 @@ export default function TaskMaster() {
         </CardContent>
       </Card>
       <TaskList
-        tasks={tasks}
+        tasks={tasks ?? []}
         onToggleComplete={handleToggleComplete}
         onDelete={handleDeleteTask}
         onUpdate={handleUpdateTask}

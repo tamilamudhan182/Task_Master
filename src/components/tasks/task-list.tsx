@@ -12,9 +12,9 @@ import { CheckCircle2 } from "lucide-react";
 
 interface TaskListProps {
   tasks: Task[];
-  onToggleComplete: (id: string) => void;
+  onToggleComplete: (id: string, completed: boolean) => void;
   onDelete: (id: string) => void;
-  onUpdate: (id: string, newValues: { text: string; dueDate: Date | null }) => void;
+  onUpdate: (id: string, newValues: { description: string; dueDate: Date | null }) => void;
 }
 
 export default function TaskList({
@@ -23,8 +23,9 @@ export default function TaskList({
   onDelete,
   onUpdate,
 }: TaskListProps) {
-  const activeTasks = tasks.filter((task) => !task.completed);
-  const completedTasks = tasks.filter((task) => task.completed);
+  const sortedTasks = tasks.sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis());
+  const activeTasks = sortedTasks.filter((task) => !task.completed);
+  const completedTasks = sortedTasks.filter((task) => task.completed);
 
   return (
     <div className="space-y-8">
