@@ -47,7 +47,7 @@ export default function LandingPage() {
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="#" className="flex items-center gap-2" prefetch={false}>
-              <DiamondIcon className="h-6 w-6" />
+              <div className="w-6 h-6 bg-primary text-primary-foreground flex items-center justify-center rounded-md font-bold text-sm">D</div>
               <span className="font-bold text-lg">TaskMaster</span>
             </Link>
           </div>
@@ -67,16 +67,16 @@ export default function LandingPage() {
         </div>
       </header>
       <main className="flex-1">
-        <section className="relative">
-          <div className="container py-24 md:py-40 text-center">
+        <section className="relative w-full py-24 md:py-40 flex flex-col items-center justify-center">
+          <div className="px-4 md:px-6 flex flex-col items-center justify-center">
             <Badge variant="outline" className="mb-6 bg-accent/10 border-accent/20 text-accent">
               <Zap className="mr-2 h-4 w-4" />
               We're live! Check out the new dashboard.
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4 text-center">
               Effortless Task Management for Everyone
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 text-center">
               TaskMaster helps you stay organized and productive. Manage your daily
               tasks with a simple and intuitive interface designed for modern teams.
             </p>
