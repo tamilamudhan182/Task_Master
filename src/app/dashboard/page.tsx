@@ -1,3 +1,4 @@
+
 import { ThemeToggle } from "@/components/theme-toggle";
 import TaskMaster from "@/components/tasks/task-master";
 import { UserNav } from "@/components/user-nav";
@@ -16,7 +17,7 @@ export default function DashboardPage() {
           </div>
         </div>
       </header>
-      <main className="flex-1">
+      <main className="flex-1 flex flex-col items-center justify-center">
         <div className="container py-8 md:py-12">
             <div className="max-w-3xl mx-auto">
                 <TaskMaster />
