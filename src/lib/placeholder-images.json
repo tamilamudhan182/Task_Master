@@ -1,3 +1,22 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "how-it-works-1",
+      "description": "A person standing next to a large smartphone with a download icon on the screen.",
+      "imageUrl": "https://images.unsplash.com/photo-1587573578335-9672da4d0292?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkb3dubG9hZCUyMGFwcHxlbnwwfHx8fDE3Njc3Nzc2NDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "download app"
+    },
+    {
+      "id": "how-it-works-2",
+      "description": "Two people interacting with a large smartphone that displays a user profile or sign-up interface.",
+      "imageUrl": "https://images.unsplash.com/photo-1762330472282-b9feedee7e5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjcmVhdGUlMjBhY2NvdW50fGVufDB8fHx8MTc2Nzc3NzY0OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "create account"
+    },
+    {
+      "id": "how-it-works-3",
+      "description": "Two people celebrating with a smartphone and a tablet, both showing a success checkmark.",
+      "imageUrl": "https://picsum.photos/seed/how-it-works-3/600/400",
+      "imageHint": "install enjoy"
+    }
+  ]
 }
