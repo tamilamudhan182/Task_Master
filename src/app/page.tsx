@@ -89,7 +89,7 @@ export default function LandingPage() {
               {/* Wavy line background */}
               <div className="hidden lg:block absolute top-1/2 left-0 w-full h-px -translate-y-1/2">
                 <svg width="100%" height="100" viewBox="0 0 1000 100" preserveAspectRatio="none" className="absolute top-1/2 left-0 w-full -translate-y-1/2">
-                    <path d="M0,50 Q250,0 500,50 T1000,50" stroke="hsl(var(--border))" stroke-width="2" fill="none" stroke-dasharray="10 5" />
+                    <path d="M0,50 Q250,0 500,50 T1000,50" stroke="hsl(var(--border))" strokeWidth="2" fill="none" strokeDasharray="10 5" />
                 </svg>
               </div>
 
